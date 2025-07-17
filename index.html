@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planetary Action, Research & Creativity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FDF4; /* Light Green Background */
+            color: #4B5563; /* Neutral Gray for body text */
+        }
+        /* Offset sections under fixed header */
+        #vision-mission,
+        #impact,
+        #programs,
+        #timeline,
+        #offerings,
+        #selection-application,
+        #contact,
+        #partners,
+        #initiative {
+            scroll-margin-top: 5rem;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #E0F2FE; } /* Slightly bluish light background for scrollbar track */
+        ::-webkit-scrollbar-thumb { background: #22C55E; border-radius: 10px; } /* Accent Green */
+        ::-webkit-scrollbar-thumb:hover { background: #166534; } /* Dark Green */
+
+        /* Header scroll effect */
+        header {
+            background-color: transparent;
+            box-shadow: none;
+            transition: background-color 0.4s ease-out, box-shadow 0.4s ease-out, backdrop-filter 0.4s ease-out;
+        }
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Hero Section Parallax Background with subtle green overlay */
+        .hero-parallax {
+            background-image: url('https://images.unsplash.com/photo-1532601224476-15c79f24319A?q=80&w=2070&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .hero-parallax::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(232, 235, 233, 0.6), rgba(34, 197, 94, 0.4)); /* Dark to Accent Green gradient */
+            z-index: 0;
+        }
+        #hero .relative.z-10 {
+            position: relative; /* Ensure hero content stays above pseudo-element overlay */
+            z-index: 1;
+        }
+
+
+        /* --- ENHANCED ANIMATIONS --- */
+
+        /* General reveal-on-scroll animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section Intro Animation */
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-100px) scale(0.8); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        #hero-logo {
+            animation: dropIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        #hero-text-1 {
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+        }
+        #hero-text-2 {
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+        }
+        #hero-button {
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.2s forwards;
+        }
+        #hero-button:hover {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+
+        /* Vision/Mission 3D Tilt Effect */
+        .tilt-card {
+            transition: transform 0.1s linear, box-shadow 0.3s ease-out;
+            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); /* Light Green gradient */
+            border: 1px solid #D1FAE5; /* Even lighter green border */
+        }
+        .tilt-card:hover {
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2);
+        }
+        
+        /* Card hover enhancement */
+        .interactive-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            border: 1px solid transparent;
+        }
+        .interactive-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15);
+        }
+        /* Updated hover colors */
+        .interactive-card-primary:hover { border-color: #22C55E; } /* Accent Green */
+        .interactive-card-secondary:hover { border-color: #16A34A; } /* Darker Accent Green */
+        .interactive-card-tertiary:hover { border-color: #047857; } /* Even Darker Green for third card */
+
+
+        /* Vertical Timeline Styling */
+        .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        .timeline-container::after { content: ''; position: absolute; width: 4px; background-color: #86EFAC; top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 2px; } /* Medium Green */
+        .timeline-item { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .timeline-item.left { left: 0; transform: translateX(-50px); }
+        .timeline-item.right { left: 50%; transform: translateX(50px); }
+        .timeline-item.animated { opacity: 1; transform: translateX(0); }
+
+        /* Leaf icon and animation for timeline */
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23166534" viewBox="0 0 24 24" stroke-width="1.5" stroke="%23166534" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17.25a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM9.75 17.25c-4.478 0-6.75-2.222-6.75-4.5 0-2.278 2.272-4.5 6.75-4.5s6.75 2.222 6.75 4.5c0 2.278-2.272 4.5-6.75 4.5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21.586 11.213A9.75 9.75 0 0 0 12 2.25C6.832 2.25 2.5 6.418 2.5 11.586c0 5.168 4.332 9.336 9.5 9.336 5.168 0 9.336-4.168 9.336-9.336ZM12 20.25a8.25 8.25 0 1 1 0-16.5 8.25 8.25 0 0 1 0 16.5Z" /></svg>'); 
+            background-size: 100%;
+            background-color: white;
+            border: 2px solid #166534; /* Dark Green */
+            top: 22px;
+            border-radius: 50%; /* Keep circle shape for the icon container */
+            z-index: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: leafPulse 2s infinite ease-in-out; /* Leaf animation */
+        }
+        .timeline-item.left::after    { right: -18px; }
+        .timeline-item.right::after  { left: -18px; }
+        .timeline-content { padding: 20px 30px; background-color: white; border-radius: 8px; box-shadow: 0 4px 15px -2px rgba(0,0,0,0.08); border: 1px solid #D1FAE5; } /* Light Green border */
+
+        @keyframes leafPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Mobile menu styles */
+        #mobile-menu { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+        #mobile-menu.active { transform: translateX(0); }
+
+        @media screen and (max-width: 768px) {
+            .timeline-container::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; transform: translateX(50px) }
+            .timeline-item.right { left: 0; }
+            .timeline-item.animated { transform: translateX(0); }
+            .timeline-item.left::after, .timeline-item.right::after { left: 13px; }
+            nav ul.md\:flex { display: none; }
+            #hamburger-btn { display: block; }
+        }
+        @media screen and (min-width: 769px) {
+            nav ul.md\:flex { display: flex !important; }
+            #hamburger-btn { display: none; }
+        }
+
+        /* Header nav link hover effect */
+        header nav ul li a {
+            position: relative;
+            padding-bottom: 5px;
+            font-weight: 600; /* Make navigation links bolder */
+        }
+        header nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #22C55E; /* Accent Green */
+            transition: width 0.3s ease-out;
+        }
+        header nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Adjust font sizes and line heights for better readability */
+        h1 { font-size: 3.5rem; line-height: 1.1; } /* Larger for hero */
+        h2 { font-size: 3rem; line-height: 1.2; } /* Consistent for section titles */
+        h3 { font-size: 2.25rem; line-height: 1.3; } /* For card titles */
+        p { font-size: 1.125rem; line-height: 1.7; } /* For body paragraphs */
+        ul li { font-size: 1rem; line-height: 1.6; } /* For list items */
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="py-4 fixed w-full z-30">
+        <nav class="container mx-auto px-4 flex items-center justify-between">
+            <a href="#" class="flex items-center text-2xl font-bold text-[#166534]"> <img src="logo.png" alt="Planetary Action Logo" class="h-28 w-28 mr-2 rounded-full transition-all duration-300 hover:rotate-12">
+            </a>
+
+            <ul class="hidden md:flex items-center space-x-8">
+                <li><a href="#vision-mission" class="text-gray-600 hover:text-[#22C55E] transition-colors duration-300 font-medium">Vision & Mission</a></li> <li><a href="#programs" class="text-gray-600 hover:text-[#22C55E] transition-colors duration-300 font-medium">Programs</a></li> <li><a href="#timeline" class="text-gray-600 hover:text-[#22C55E] transition-colors duration-300 font-medium">Timeline</a></li> <li><a href="#offerings" class="text-gray-600 hover:text-[#22C55E] transition-colors duration-300 font-medium">Offerings</a></li> <li><a href="#contact" class="text-gray-600 hover:text-[#22C55E] transition-colors duration-300 font-medium">Contact</a></li> <li><a href="#selection-application" class="bg-[#22C55E] text-white px-5 py-2 rounded-full font-semibold hover:bg-[#166534] transition-all duration-300 shadow transform hover:scale-105">Apply Now</a></li> </ul>
+
+            <button id="hamburger-btn" class="md:hidden text-gray-600 hover:text-[#22C55E] focus:outline-none z-50"> <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+    </header>
+
+    <div id="mobile-menu" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-95 z-40 flex flex-col justify-center items-center">
+        <button id="close-menu-btn" class="absolute top-8 right-8 text-white text-4xl focus:outline-none">&times;</button>
+        <ul class="text-center">
+            <li class="my-4"><a href="#vision-mission" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Vision & Mission</a></li> <li class="my-4"><a href="#programs" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Programs</a></li> <li class="my-4"><a href="#timeline" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Timeline</a></li> <li class="my-4"><a href="#offerings" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Offerings</a></li> <li class="my-4"><a href="#selection-application" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Apply Now</a></li> <li class="my-4"><a href="#contact" class="text-white hover:text-[#86EFAC] text-2xl font-semibold">Contact</a></li> </ul>
+    </div>
+
+    <section id="hero" class="hero-parallax relative text-white h-screen flex flex-col items-center justify-center text-center px-4">
+        <div class="relative z-10 container mx-auto flex flex-col items-center">
+            <img id="hero-logo" src="image.png" alt="Planetary Action Logo" class="w-56 h-56 md:w-72 md:h-72 mb-8">
+            
+            <h1 id="hero-text-1" class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4">
+                Igniting <span class="text-[#86EFAC]">Planetary Action</span> </h1>
+            <p id="hero-text-2" class="text-lg md:text-xl max-w-3xl mx-auto mb-8 font-light">
+                Empowering the next generation of founders to build a regenerative future through creativity, research, and innovation.
+            </p>
+            <a id="hero-button" href="#selection-application" class="bg-[#22C55E] text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-[#166534] transition-all duration-300 shadow-lg transform hover:scale-105 inline-block"> Start Your Journey
+            </a>
+        </div>
+    </section>
+
+    <section id="vision-mission" class="py-20 px-4">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-[#166534] mb-4 reveal">Our Vision & Mission</h2> <p class="text-lg text-[#4B5563] max-w-3xl mx-auto mb-12 reveal font-medium" data-reveal-delay="200">
+                To build a regenerative future by nurturing changemakers and empowering purpose-driven founders.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 text-left">
+                <div class="p-8 rounded-lg shadow-lg reveal tilt-card" data-reveal-delay="300">
+                    <h3 class="text-3xl font-bold text-[#166534] mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mr-3 text-[#166534]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5M6 10.5L9.75 7.5L12 9.75L15.75 6.75L18 9.75L20.25 7.5L22.5 10.5M10.5 21L12.75 18.75L15 21M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Vision
+                    </h3>
+                    <p class="text-[#4B5563] leading-relaxed">
+                        To build a regenerative future by nurturing the next generation of changemakers, equipping them to co-create innovative, inclusive, and scalable solutions for social and planetary wellbeing.
+                    </p>
+                </div>
+                <div class="p-8 rounded-lg shadow-lg reveal tilt-card" data-reveal-delay="400">
+                    <h3 class="text-3xl font-bold text-[#166534] mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 mr-3 text-[#166534]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 0 0 9-9c0-1.04-.15-2.05-.44-3.01L14.75 3.5c-.38-.6-.94-1-.5-1.5-.78-.5-1.74-.8-2.75-.8-1.01 0-1.97.3-2.75.8-.44.5-.08.9-.5 1.5L3.44 8.99C3.15 9.95 3 10.96 3 12a9 9 0 0 0 9 9Z" />
+                        </svg>
+                        Mission
+                    </h3>
+                    <p class="text-[#4B5563] leading-relaxed">
+                        Empowering purpose-driven founders to envision, prototype, and scale transformative solutions that respect ecological limits, honor community wisdom, and drive systemic change through a full-stack venture-building pipeline.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="impact" class="py-20 bg-[#166534] text-white"> <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 reveal">Our Impact in Numbers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="reveal">
+                    <p class="text-6xl font-extrabold text-[#86EFAC]" data-target="50">0</p> <p class="text-xl font-medium mt-2">Startups Incubated</p>
+                </div>
+                <div class="reveal" data-reveal-delay="200">
+                    <p class="text-6xl font-extrabold text-[#86EFAC]" data-target="100">0</p> <p class="text-xl font-medium mt-2">Mentors Onboard</p>
+                </div>
+                <div class="reveal" data-reveal-delay="400">
+                    <p class="text-6xl font-extrabold text-[#86EFAC]" data-target="15">0</p> <p class="text-xl font-medium mt-2">Focus Areas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="programs" class="py-20 bg-[#F0FDF4]"> <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-[#166534] text-center mb-12 reveal">Our Programs</h2> <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-[#22C55E] interactive-card interactive-card-primary reveal"> <h3 class="text-3xl font-bold text-[#22C55E] mb-4">SPARC Seed</h3> <p class="text-lg text-[#4B5563] mb-2"><span class="font-semibold">Type:</span> Pre-Incubation</p>
+                    <p class="text-lg text-[#4B5563] mb-4"><span class="font-semibold">Duration:</span> 12 Weeks</p>
+                    <p class="text-[#6B7280]"><span class="font-semibold">Outcome:</span> Validated idea, prototype, pitch-ready.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-[#16A34A] interactive-card interactive-card-secondary reveal" data-reveal-delay="200"> <h3 class="text-3xl font-bold text-[#16A34A] mb-4">SPARC Grow</h3> <p class="text-lg text-[#4B5563] mb-2"><span class="font-semibold">Type:</span> Incubation</p>
+                    <p class="text-lg text-[#4B5563] mb-4"><span class="font-semibold">Duration:</span> 12 Weeks</p>
+                    <p class="text-[#6B7280]"><span class="font-semibold">Outcome:</span> Tested product, business/impact model.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-[#047857] interactive-card interactive-card-tertiary reveal" data-reveal-delay="400"> <h3 class="text-3xl font-bold text-[#047857] mb-4">SPARC Scale</h3> <p class="text-lg text-[#4B5563] mb-2"><span class="font-semibold">Type:</span> Accelerate</p>
+                    <p class="text-lg text-[#4B5563] mb-4"><span class="font-semibold">Duration:</span> 12 Weeks</p>
+                    <p class="text-[#6B7280]"><span class="font-semibold">Outcome:</span> Funding support, partnerships, scale strategy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-[#166534] text-center mb-12 reveal">Program Journey</h2> <div class="timeline-container">
+                <div class="timeline-item left"><div class="timeline-content"><h3 class="text-xl font-semibold">Weeks 1-4: Ideation & Validation</h3><p>Focus: Purpose, Problem Discovery, Idea Generation, Research & Validation.</p></div></div>
+                <div class="timeline-item right"><div class="timeline-content"><h3 class="text-xl font-semibold">Weeks 5-8: Development & Prototyping</h3><p>Focus: MVP Development, Business Model Refinement, Local Pilots.</p></div></div>
+                <div class="timeline-item left"><div class="timeline-content"><h3 class="text-xl font-semibold">Weeks 9-12: Go-to-Market & Funding</h3><p>Focus: Market Entry Strategy, Partnership Building, Pitch Readiness.</p></div></div>
+                <div class="timeline-item right"><div class="timeline-content"><h3 class="text-xl font-semibold">Demo Day & Graduation</h3><p>Showcase achievements to investors, network, and receive certification.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="offerings" class="py-20 bg-[#F0FDF4]"> <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-[#166534] text-center mb-12 reveal">What We Offer</h2> <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#22C55E] reveal"><h3 class="text-2xl font-semibold text-[#22C55E] mb-3">Mentorship & Advisory</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Access to domain experts</li><li>One-on-one mentorship</li><li>Regular office hours</li></ul></div> <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#16A34A] reveal" data-reveal-delay="100"><h3 class="text-2xl font-semibold text-[#16A34A] mb-3">Infrastructure Support</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Co-working / Digital workspace</li><li>Prototyping labs access</li><li>Access to partner facilities</li></ul></div> <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#047857] reveal" data-reveal-delay="200"><h3 class="text-2xl font-semibold text-[#047857] mb-3">Workshops</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Business Model & Lean Startup</li><li>Design Thinking & Innovation</li><li>Fundraising & Pitching</li></ul></div> <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#22C55E] reveal" data-reveal-delay="300"><h3 class="text-2xl font-semibold text-[#22C55E] mb-3">Funding Access</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Seed funding/grants</li><li>Investor connections</li><li>Pitch readiness support</li></ul></div> <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#16A34A] reveal" data-reveal-delay="400"><h3 class="text-2xl font-semibold text-[#16A34A] mb-3">Community & Network</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Peer learning cohorts</li><li>Startup ecosystem access</li><li>Industry & ecosystem events</li></ul></div> <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#047857] reveal" data-reveal-delay="500"><h3 class="text-2xl font-semibold text-[#047857] mb-3">Post-Program Support</h3><ul class="list-disc list-inside text-[#4B5563] space-y-2"><li>Alumni Network</li><li>Ecosystem Partnerships</li><li>Grant/Funding Facilitation</li></ul></div> </div>
+        </div>
+    </section>
+    
+    <section id="selection-application" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="bg-[#166534] text-white p-12 rounded-lg shadow-2xl text-center reveal"> <h2 class="text-4xl font-bold mb-4">Ready to Make an Impact?</h2>
+                <p class="text-lg text-[#D1FAE5] mb-8 max-w-2xl mx-auto font-light">We are looking for innovative ideas, committed teams, and scalable solutions aligned with sustainability and positive change.</p> <a href="https://docs.google.com/forms/d/1lhbBuOk7q8EeW_amC_5Ze1Z_d99SkPfKFpu0fqDwml0/edit?pli=1" target="_blank" class="inline-block bg-[#22C55E] text-white px-10 py-4 rounded-full text-xl font-bold hover:bg-[#16A34A] transition-all duration-300 shadow-lg transform hover:scale-105">Apply Now</a> <p class="text-center text-sm text-[#86EFAC] mt-4 font-normal">*Link is a placeholder. Please replace with your actual Google Form URL.</p> </div>
+        </div>
+    </section>
+
+    <section id="initiative" class="py-20 bg-[#F0FDF4]"> <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-[#166534] mb-4 reveal">An Initiative By</h2> <p class="text-lg text-[#4B5563] max-w-2xl mx-auto mb-12 reveal font-medium" data-reveal-delay="200">
+                A pioneering force in regenerative entrepreneurship.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-16">
+                <img src="eth_img.jpeg" alt="ErthaLoka Logo" class="h-32 md:h-40 w-auto object-contain reveal" data-reveal-delay="300">
+            </div>
+        </div>
+    </section>
+
+    <section id="partners" class="py-20 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-[#166534] mb-4 reveal">Our Program Partners</h2> <p class="text-lg text-[#4B5563] max-w-2xl mx-auto mb-12 reveal font-medium" data-reveal-delay="200">
+                Collaborating with leading organizations to foster innovation and impact.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-16">
+                <img src="aic.jpeg" alt="AIC-PECF Logo" class="h-24 md:h-28 w-auto object-contain reveal" data-reveal-delay="300">
+                <img src="comp.jpeg" alt="Club des Entrepreneurs Logo" class="h-24 md:h-28 w-auto object-contain reveal" data-reveal-delay="400">
+                <img src="river.jpeg" alt="River Venture Studio Logo" class="h-24 md:h-28 w-auto object-contain reveal" data-reveal-delay="500">
+                </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-[#166534] text-white py-12"> <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">Join Us in Building a Sustainable Future</h2>
+            <p class="text-lg text-[#D1FAE5] mb-8 font-light">Connect with us to learn more about our programs and partnerships.</p> <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mb-8">
+                <p class="text-lg">📧 <a href="mailto:sparc.seed@gmail.com" class="text-[#86EFAC] hover:underline font-semibold">sparc.seed@gmail.com</a></p> <p class="text-lg">📞 <a href="tel:+917829778299" class="text-[#86EFAC] hover:underline font-semibold">+91 78297 78299</a></p> </div>
+            <p class="text-sm text-[#D1FAE5] font-normal">&copy; 2025. An Initiative by ErthaLoka.</p> </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- Header Scroll Effect ---
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // --- Mobile Menu Logic ---
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        const openMobileMenu = () => { mobileMenu.classList.add('active'); document.body.style.overflow = 'hidden'; };
+        const closeMobileMenu = () => { mobileMenu.classList.remove('active'); document.body.style.overflow = ''; };
+        hamburgerBtn.addEventListener('click', openMobileMenu);
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileMenuLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+        // --- Intersection Observer for Scroll Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.dataset.revealDelay) || 0;
+                    setTimeout(() => {
+                        // General reveal animation
+                        if (entry.target.classList.contains('reveal')) {
+                            entry.target.classList.add('visible');
+                        }
+                        // Counter animation
+                        const counter = entry.target.querySelector('[data-target]');
+                        if (counter && !counter.classList.contains('animated')) {
+                            animateCounter(counter);
+                            counter.classList.add('animated'); 
+                        }
+                        // Timeline animation (removed 'continuous-animation' if not needed)
+                        if (entry.target.classList.contains('timeline-item')) {
+                            entry.target.classList.add('animated');
+                        }
+                    }, delay);
+                    // Only unobserve if it's a one-time animation
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal, .timeline-item').forEach(el => observer.observe(el));
+        
+        function animateCounter(counterElement) {
+            const target = +counterElement.getAttribute('data-target');
+            let current = 0;
+            const increment = target / 100;
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    counterElement.innerText = Math.ceil(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counterElement.innerText = target;
+                }
+            };
+            requestAnimationFrame(updateCounter);
+        }
+
+        // --- Vision & Mission 3D Tilt Effect ---
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const { width, height } = rect;
+                const rotateX = (y - height / 2) / (height / 2) * -7;
+                const rotateY = (x - width / 2) / (width / 2) * 7;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transition = 'transform 0.5s ease-out';
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'transform 0.1s linear';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
